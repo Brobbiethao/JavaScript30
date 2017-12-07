@@ -10,7 +10,7 @@
     <div class="clock">
       <div class="clock-face">
         <div class="hand hour-hand"></div>
-        <div class="hand min-hand"></div>
+        <div class="hand minute-hand"></div>
         <div class="hand second-hand"></div>
       </div>
     </div>
@@ -62,12 +62,43 @@
       background:black;
       position: absolute;
       top:50%;
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      transition: all 0.05s;
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
     }
 
   </style>
 
   <script>
+    const hourHand = document.querySelector('.hour-hand');        // hourHand is assigned hour-hand element
+    const minuteHand = document.querySelector('.minute-hand');    // minuteHand is assigned minute-hand element
+    const secondHand = document.querySelector('.second-hand');    // secondHand is assigned second-hand element
 
+
+    // Step 1: Build a function to move clock hands with interact with date()
+    function setDate() {
+      const now = new Date(); // new is assigned value of new Date();
+      console.log(now);
+
+      // Step 1a: Breakout the hour hand
+      const hours = now.getHours();                               // assign hours value of getHours()
+      const hoursDegrees = ((hours / 12 ) * 360) + 90;            // assign hoursDegrees the value of hours divided by 12 total hours, mulitplied by the degrees of a full circle, added 90 degrees to start absolute verticle
+      hourHand.style.transform = `rotate(${hoursDegrees}deg)`;    // hour-hand element is assigned rotation value hoursdegrees
+
+      // Step 1b: Breakout the minute hand
+      const minutes = now.getMinutes();                           // assign minutes the value of now.getMinutes()
+      const minutesDegrees = ((minutes / 60) * 360) + 90;         // assign minutesDegrees the value of minutes divided by 60 total minutes, mulitplied by the degrees of a full circle, added 90 degrees to start absolute verticle
+      minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;// minute-hand element is assigned rotation value minutesDegrees
+
+      // Step 1c: Breakout the second hand
+      const seconds = now.getSeconds();                           // assign seconds the value of now.getSeconds()
+      const secondsDegrees = ((seconds / 60) * 360) + 90;         // assign secondsDegrees the value of seconds divided by 60 total minutes, mulitplied by the degrees of a full circle, added 90 degrees to start absolute verticle      
+      secondHand.style.transform = `rotate(${secondsDegrees}deg)`;// second-hand element is assigned rotation value secondsDegrees
+
+    }
+    
+    setInterval(setDate, 1000); // setInterval is invoking setDate function and interval
 
   </script>
 </body>
