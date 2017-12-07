@@ -59,6 +59,34 @@
 
 <script>
 
+  // Step 2: Need a function to detect data keys using element.keyCode, assign audio to element.keyCode
+  function playSound(e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`); // audio is assigned to data-key
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`); // key element is assigned to key 
+    if (!audio) return; // this ignores null values;
+    // console.log(audio);
+    // console.log(`audio[data-key="${e.keyCode}"]`);
+    // console.log(`audio[src="${audio.src}"]`);
+    audio.currentTime = 0; // sets audio trigger to 0
+
+    key.classList.add('playing'); // javascript version of jquery
+    audio.play(); // audio is invoked with keydown of input
+  }
+  // Step 3: Need a function to capture all .key elements
+  const keys = document.querySelectorAll('.key'); // creates array from queryselector
+
+  // Step 4: Need a function to highlight and callback to unhighlight
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition)); // maps through the keydown calling back removeTransiton
+
+  // Step 5: Need a function to unhighlight element
+  function removeTransition(e) {
+    if (e.propertyName !== 'transform') return;
+    e.target.classList.remove('playing');
+  }
+
+  // Step 1: Add event listener to catch keydown with callback to audio.
+  window.addEventListener('keydown', playSound); // listens to global keydown with a callback to playsound
+
 </script>
 
 
