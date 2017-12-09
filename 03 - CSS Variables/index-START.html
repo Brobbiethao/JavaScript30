@@ -21,6 +21,27 @@
   <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
 
   <style>
+    /* 
+    Step 1: Create CSS properties to attribute to element name identified in tags
+      1a: Create CSS variables
+      1b: Assign variables to CSS
+
+    */
+    :root { 
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    img {
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+
+    .hl {
+      color: var(--base);
+    }
 
     /*
       misc styles, nothing to do with CSS variables
@@ -45,7 +66,31 @@
   </style>
 
   <script>
+    // Step 2: Collect all input elements on DOM
+    const inputs = document.querySelectorAll('.controls input'); // Assign inputs the value of .control inputs (input elements inside the div class=controls)
+    // console.log(inputs);
+    
+    // Step 3: Add event listener to catch changes, callback to the DOM to physically render changes
+    inputs.forEach(input => input.addEventListener('mousemove', handleUpdate)); // Mousemove catch to detect range value change, callback to handleUpdate
+
+
+    // Step 4: Handle the physical render and change of DOM.
+    function handleUpdate() {
+      const suffix = this.dataset.sizing || ''; // assign suffix the value of this.dataset.sizing (data-key)
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix); 
+      // renders the document.documentElement.style.setProperty = (
+        // es6 `                      + 
+        // CSS variable case          +
+        // (selector)                 +      
+        // this.attirubute            +
+        // this = input.name          +
+        // ,                          + 
+        // this.value                 +
+        // suffix
+      // )
+    }
   </script>
+
 
 </body>
 </html>
