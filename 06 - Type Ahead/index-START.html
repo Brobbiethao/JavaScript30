@@ -15,7 +15,53 @@
     </ul>
   </form>
 <script>
+// Step 1: Create an AJAX call, push data to array
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+const cities = []; // empty array
+fetch(endpoint) // AJAX call to endpoint
+  .then(rawdata => rawdata.json()) // parse data into JSON
+  .then(data => cities.push(...data)); // push JSON parsed data into the cities array [...spreadOperator]
+
+// console.log(cities);
+
+// Step 2: Build a function that returns the cities array filtered
+function findMatches(wordToMatch, cities) {
+  return cities.filter(data => {
+    const regex = new RegExp(wordToMatch, 'gi'); // regex sort of input
+    return data.city.match(regex) || data.state.match(regex); // return city or state match
+  });
+}
+
+// Step 4: Modify the population from integer to a string
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+// Step 3: Create JSX element to modify the DOM
+function displayMatches() {
+  const matchArray = findMatches(this.value, cities); // matchArray = findMatches invoked with (this, cities)
+  // create dom element based off match.Array
+  const html = matchArray.map(place => { 
+    const regex = new RegExp(this.value, 'gi'); // redeclare regex inside this scope
+    const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`); // replace this.value with highlighted this.value
+    const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`); // replace this.value with highlighted this.value
+    // return JSX DOM
+    return `
+      <li>
+        <span class="name">${cityName}, ${stateName}</span>
+        <span class="population">${numberWithCommas(place.population)}</span>
+      </li>
+    `;
+  }).join(''); // join the array into a string
+  suggestions.innerHTML = html; // modify the DOM = html
+}
+
+const searchInput = document.querySelector('.search'); // DOM element assigned to searchInput
+const suggestions = document.querySelector('.suggestions'); // DOM element assigned to searchInput
+
+searchInput.addEventListener('change', displayMatches); // DOM element listening to changes
+searchInput.addEventListener('keyup', displayMatches); // DOM element listening to keyup input
 
 </script>
   </body>
